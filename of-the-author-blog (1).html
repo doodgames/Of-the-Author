@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Of The Author</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,500&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1814;
+    --ink-light: #4a4540;
+    --ink-muted: #8a837a;
+    --paper: #faf8f4;
+    --paper-warm: #f2ede4;
+    --paper-card: #ffffff;
+    --rule: #d8d0c4;
+    --rule-dark: #b0a898;
+    --accent: #8b1a1a;
+    --accent-light: #c8403a;
+    --accent-bg: #f9f0f0;
+    --gold: #b8960c;
+    --gold-light: #f5ecc0;
+    --col-max: 1200px;
+    --col-text: 680px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'EB Garamond', Georgia, serif;
+    background: var(--paper);
+    color: var(--ink);
+    font-size: 18px;
+    line-height: 1.75;
+  }
+  a { color: inherit; text-decoration: none; }
+  img { max-width: 100%; height: auto; display: block; }
+
+  .masthead {
+    border-bottom: 3px double var(--rule-dark);
+    background: var(--paper);
+    position: sticky; top: 0; z-index: 100;
+    box-shadow: 0 2px 12px rgba(26,24,20,0.06);
+  }
+  .masthead-top {
+    text-align: center;
+    padding: 20px 24px 4px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .masthead-date {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    margin-bottom: 4px;
+  }
+  .masthead-title {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: clamp(32px, 5vw, 62px);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    line-height: 1;
+  }
+  .masthead-subtitle {
+    font-family: 'EB Garamond', Georgia, serif;
+    font-style: italic;
+    font-size: 15px;
+    color: var(--ink-muted);
+    margin-top: 6px;
+  }
+  .masthead-nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 24px;
+    overflow-x: auto;
+  }
+  .nav-link {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-light);
+    padding: 10px 16px;
+    border-right: 1px solid var(--rule);
+    white-space: nowrap;
+    cursor: pointer;
+    transition: color 0.15s, background 0.15s;
+  }
+  .nav-link:first-child { border-left: 1px solid var(--rule); }
+  .nav-link:hover, .nav-link.active { color: var(--accent); background: var(--accent-bg); }
+
+  .page { display: none; }
+  .page.active { display: block; }
+
+  .front-banner {
+    border-bottom: 2px solid var(--ink);
+    padding: 40px 24px 32px;
+    max-width: var(--col-max);
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+  }
+  .front-banner-lead { padding-right: 40px; border-right: 1px solid var(--rule-dark); }
+  .front-banner-secondary { padding-left: 40px; display: flex; flex-direction: column; gap: 20px; }
+  .post-kicker {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+  .post-headline-xl {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: clamp(26px, 3.5vw, 44px);
+    font-weight: 700;
+    line-height: 1.12;
+    letter-spacing: -0.01em;
+    margin-bottom: 12px;
+    cursor: pointer;
+    transition: color 0.15s;
+  }
+  .post-headline-xl:hover { color: var(--accent); }
+  .post-headline-lg {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: clamp(20px, 2.5vw, 26px);
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 8px;
+    cursor: pointer;
+    transition: color 0.15s;
+  }
+  .post-headline-lg:hover { color: var(--accent); }
+  .post-deck { font-family: 'EB Garamond', Georgia, serif; font-size: 17px; color: var(--ink-light); line-height: 1.6; margin-bottom: 12px; }
+  .post-byline { font-family: 'DM Sans', sans-serif; font-size: 12px; letter-spacing: 0.06em; color: var(--ink-muted); }
+  .post-byline strong { color: var(--ink-light); font-weight: 500; }
+  .secondary-post { padding-bottom: 16px; border-bottom: 1px solid var(--rule); }
+  .secondary-post:last-child { border-bottom: none; padding-bottom: 0; }
+
+  .more-posts { max-width: var(--col-max); margin: 0 auto; padding: 32px 24px; border-bottom: 1px solid var(--rule-dark); }
+  .section-rule { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
+  .section-rule-label { font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink); white-space: nowrap; }
+  .section-rule-line { flex: 1; border-top: 2px solid var(--ink); }
+  .posts-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 28px; }
+  .post-card { cursor: pointer; border-top: 2px solid var(--rule); padding-top: 16px; transition: border-color 0.15s; }
+  .post-card:hover { border-top-color: var(--accent); }
+  .post-card-img { width: 100%; height: 180px; object-fit: cover; margin-bottom: 12px; background: var(--paper-warm); }
+  .post-headline-sm { font-family: 'Playfair Display', Georgia, serif; font-size: 19px; font-weight: 700; line-height: 1.25; margin-bottom: 8px; }
+
+  .article-wrap { max-width: var(--col-text); margin: 48px auto; padding: 0 24px; }
+  .article-back { font-family: 'DM Sans', sans-serif; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); cursor: pointer; margin-bottom: 28px; display: inline-flex; align-items: center; gap: 6px; }
+  .article-back:hover { text-decoration: underline; }
+  .article-kicker { margin-bottom: 10px; }
+  .article-headline { font-family: 'Playfair Display', Georgia, serif; font-size: clamp(28px, 4vw, 48px); font-weight: 700; line-height: 1.1; letter-spacing: -0.015em; margin-bottom: 16px; }
+  .article-deck { font-family: 'EB Garamond', Georgia, serif; font-size: 20px; font-style: italic; color: var(--ink-light); line-height: 1.55; border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); padding: 16px 0; margin: 16px 0 20px; }
+  .article-meta { font-family: 'DM Sans', sans-serif; font-size: 13px; color: var(--ink-muted); margin-bottom: 28px; padding-bottom: 20px; border-bottom: 2px solid var(--ink); }
+  .article-meta strong { color: var(--ink); font-weight: 500; }
+  .article-img { width: 100%; max-height: 480px; object-fit: cover; margin: 0 0 8px; }
+  .article-img-caption { font-family: 'DM Sans', sans-serif; font-size: 12px; color: var(--ink-muted); margin-bottom: 28px; }
+  .article-body p { margin-bottom: 1.4em; font-size: 18.5px; line-height: 1.8; }
+  .article-body p:first-child::first-letter { font-family: 'Playfair Display', Georgia, serif; font-size: 4.2em; font-weight: 700; float: left; line-height: 0.82; margin: 0.06em 0.08em 0 0; color: var(--ink); }
+
+  .comments-section { max-width: var(--col-text); margin: 48px auto; padding: 0 24px 48px; }
+  .comments-header { border-top: 2px solid var(--ink); border-bottom: 1px solid var(--rule); padding: 16px 0; margin-bottom: 28px; display: flex; justify-content: space-between; align-items: baseline; }
+  .comments-title { font-family: 'Playfair Display', Georgia, serif; font-size: 22px; font-weight: 700; }
+  .comments-count { font-family: 'DM Sans', sans-serif; font-size: 13px; color: var(--ink-muted); }
+  .comment-form { background: var(--paper-warm); border: 1px solid var(--rule); padding: 20px; margin-bottom: 32px; }
+  .comment-form-title { font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-light); margin-bottom: 14px; }
+  .form-row { display: flex; gap: 12px; margin-bottom: 12px; }
+  .form-group { flex: 1; display: flex; flex-direction: column; gap: 5px; }
+  .form-group label { font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-muted); }
+  .form-group input, .form-group textarea, .form-group select { background: var(--paper-card); border: 1px solid var(--rule-dark); padding: 9px 12px; font-family: 'EB Garamond', Georgia, serif; font-size: 16px; color: var(--ink); outline: none; transition: border-color 0.15s; resize: vertical; width: 100%; }
+  .form-group input:focus, .form-group textarea:focus, .form-group select:focus { border-color: var(--accent); }
+  .btn { font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; padding: 10px 24px; cursor: pointer; transition: all 0.15s; border: none; }
+  .btn-primary { background: var(--ink); color: var(--paper); }
+  .btn-primary:hover { background: var(--accent); }
+  .btn-secondary { background: transparent; border: 1px solid var(--rule-dark); color: var(--ink-light); }
+  .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+  .btn-sm { padding: 6px 14px; font-size: 11px; }
+  .comment { border-bottom: 1px solid var(--rule); padding: 20px 0; }
+  .comment-author-row { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 8px; }
+  .comment-author { font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; color: var(--ink); }
+  .comment-author.is-editor { color: var(--accent); }
+  .comment-author.is-editor::after { content: ' · Editor'; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; background: var(--accent); color: white; padding: 1px 6px; margin-left: 8px; vertical-align: middle; }
+  .comment-date { font-family: 'DM Sans', sans-serif; font-size: 11px; color: var(--ink-muted); }
+  .comment-body { font-size: 16.5px; line-height: 1.7; color: var(--ink-light); }
+  .comment-actions { margin-top: 8px; display: flex; gap: 12px; }
+  .comment-reply-btn { font-family: 'DM Sans', sans-serif; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-muted); cursor: pointer; background: none; border: none; padding: 0; transition: color 0.15s; }
+  .comment-reply-btn:hover { color: var(--accent); }
+  .replies { padding-left: 28px; border-left: 2px solid var(--rule); margin-top: 16px; }
+  .reply { padding: 14px 0; border-bottom: 1px solid var(--rule); }
+  .reply:last-child { border-bottom: none; }
+
+  .admin-wrap { max-width: 860px; margin: 48px auto; padding: 0 24px 64px; }
+  .admin-title { font-family: 'Playfair Display', Georgia, serif; font-size: 32px; font-weight: 700; margin-bottom: 6px; }
+  .admin-subtitle { font-family: 'DM Sans', sans-serif; font-size: 13px; color: var(--ink-muted); margin-bottom: 32px; }
+  .admin-tabs { display: flex; border-bottom: 2px solid var(--ink); margin-bottom: 28px; }
+  .admin-tab { font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; padding: 10px 20px; cursor: pointer; color: var(--ink-muted); border-bottom: 2px solid transparent; margin-bottom: -2px; transition: all 0.15s; }
+  .admin-tab.active { color: var(--ink); border-bottom-color: var(--ink); }
+  .admin-tab:hover { color: var(--ink); }
+  .admin-panel { display: none; }
+  .admin-panel.active { display: block; }
+  .editor-label { font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-muted); margin-bottom: 6px; display: block; }
+  .editor-input, .editor-textarea { width: 100%; background: var(--paper-card); border: 1px solid var(--rule-dark); padding: 10px 14px; font-family: 'EB Garamond', Georgia, serif; font-size: 17px; color: var(--ink); outline: none; margin-bottom: 16px; transition: border-color 0.15s; resize: vertical; }
+  .editor-input:focus, .editor-textarea:focus { border-color: var(--accent); }
+  .editor-input.headline { font-family: 'Playfair Display', Georgia, serif; font-size: 22px; font-weight: 700; }
+  .pending-list { display: flex; flex-direction: column; gap: 16px; }
+  .pending-card { border: 1px solid var(--rule); padding: 20px; background: var(--paper-card); }
+  .pending-card-name { font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; color: var(--ink); margin-bottom: 2px; }
+  .pending-card-contact { font-family: 'DM Sans', sans-serif; font-size: 12px; color: var(--ink-muted); margin-bottom: 10px; }
+  .pending-card-excerpt { font-size: 15px; color: var(--ink-light); margin-bottom: 14px; max-height: 80px; overflow: hidden; line-height: 1.6; }
+  .pending-card-actions { display: flex; gap: 10px; }
+  .badge { font-family: 'DM Sans', sans-serif; font-size: 10px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; padding: 3px 8px; border-radius: 0; }
+  .badge-pending { background: var(--gold-light); color: #7a5f00; }
+  .badge-approved { background: #e6f2ec; color: #1a5a2f; }
+
+  .submit-wrap { max-width: 680px; margin: 48px auto; padding: 0 24px 64px; }
+  .submit-lede { font-style: italic; font-size: 19px; color: var(--ink-light); border-left: 3px solid var(--accent); padding-left: 20px; margin: 20px 0 36px; line-height: 1.65; }
+
+  .toast { position: fixed; bottom: 24px; right: 24px; background: var(--ink); color: var(--paper); font-family: 'DM Sans', sans-serif; font-size: 13px; padding: 12px 20px; z-index: 999; opacity: 0; transform: translateY(8px); transition: all 0.25s; pointer-events: none; }
+  .toast.show { opacity: 1; transform: translateY(0); }
+
+  .admin-login-wrap { max-width: 380px; margin: 80px auto; padding: 0 24px; text-align: center; }
+  .admin-login-wrap h2 { font-family: 'Playfair Display', Georgia, serif; font-size: 26px; font-weight: 700; margin-bottom: 8px; }
+  .admin-login-wrap p { font-size: 15px; color: var(--ink-muted); margin-bottom: 28px; }
+
+  .loading-state { text-align: center; padding: 60px 24px; font-family: 'DM Sans', sans-serif; font-size: 13px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-muted); }
+  .empty-state { text-align: center; padding: 60px 24px; color: var(--ink-muted); }
+  .empty-state-title { font-family: 'Playfair Display', Georgia, serif; font-size: 22px; font-weight: 700; margin-bottom: 8px; color: var(--ink-light); }
+
+  @media (max-width: 720px) {
+    .front-banner { grid-template-columns: 1fr; }
+    .front-banner-lead { padding-right: 0; border-right: none; border-bottom: 1px solid var(--rule-dark); padding-bottom: 28px; }
+    .front-banner-secondary { padding-left: 0; padding-top: 20px; }
+    .form-row { flex-direction: column; }
+    .admin-wrap, .submit-wrap { margin: 24px auto; }
+  }
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="masthead-top">
+    <div class="masthead-date" id="masthead-date"></div>
+    <div class="masthead-title">Of The Author</div>
+    <div class="masthead-subtitle">An independent journal of economic thought &amp; discourse</div>
+  </div>
+  <nav class="masthead-nav">
+    <span class="nav-link active" onclick="showPage('home', this)">Home</span>
+    <span class="nav-link" onclick="showPage('submit', this)">Submit Work</span>
+  </nav>
+</header>
+
+<div class="toast" id="toast"></div>
+
+<!-- HOME -->
+<div class="page active" id="page-home">
+  <div id="front-banner-zone"><div class="loading-state">Loading…</div></div>
+  <div class="more-posts" id="more-posts-zone"></div>
+</div>
+
+<!-- ARTICLE -->
+<div class="page" id="page-article">
+  <div class="article-wrap">
+    <div class="article-back" onclick="showPage('home', document.querySelector('.nav-link'))">← Back to Home</div>
+    <div class="post-kicker article-kicker" id="art-kicker"></div>
+    <h1 class="article-headline" id="art-headline"></h1>
+    <div class="article-deck" id="art-deck"></div>
+    <div class="article-meta" id="art-meta"></div>
+    <img class="article-img" id="art-img" alt="" style="display:none">
+    <div class="article-img-caption" id="art-img-caption"></div>
+    <div class="article-body" id="art-body"></div>
+  </div>
+  <div class="comments-section" id="comments-section"></div>
+</div>
+
+<!-- SUBMIT -->
+<div class="page" id="page-submit">
+  <div class="submit-wrap">
+    <div class="post-kicker">Contribute</div>
+    <h1 class="article-headline">Submit Your Work</h1>
+    <p class="submit-lede">We welcome essays, analyses, and commentary on economic themes from thoughtful voices. Submissions are reviewed by the editor and published at our discretion.</p>
+    <div class="comment-form" style="background:var(--paper-card);margin-bottom:0;">
+      <div class="form-row">
+        <div class="form-group"><label>Full Name *</label><input type="text" id="sub-name" placeholder="Your full name"></div>
+        <div class="form-group"><label>Email Address *</label><input type="email" id="sub-email" placeholder="you@example.com"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Affiliation (optional)</label><input type="text" id="sub-affiliation" placeholder="University, publication, title…"></div>
+        <div class="form-group"><label>Phone (optional)</label><input type="text" id="sub-phone" placeholder="+1 (555) 000-0000"></div>
+      </div>
+      <div class="form-group" style="margin-bottom:12px;"><label>Essay Title *</label><input type="text" id="sub-title" placeholder="The title of your piece"></div>
+      <div class="form-group" style="margin-bottom:16px;"><label>Your Essay *</label><textarea id="sub-essay" rows="14" placeholder="Paste your full essay here. We accept pieces of 500–4,000 words."></textarea></div>
+      <button class="btn btn-primary" onclick="submitEssay()">Submit for Review</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN -->
+<div class="page" id="page-admin">
+  <div id="admin-login-zone" style="display:none">
+    <div class="admin-login-wrap">
+      <h2>Editor Login</h2>
+      <p>Enter your password to access the editorial dashboard.</p>
+      <div class="form-group" style="margin-bottom:14px;text-align:left;">
+        <label>Password</label>
+        <input type="password" id="admin-password" placeholder="Password" onkeydown="if(event.key==='Enter')adminLogin()">
+      </div>
+      <button class="btn btn-primary" style="width:100%" onclick="adminLogin()">Enter Dashboard</button>
+      <p style="margin-top:14px;font-size:12px;color:var(--ink-muted);">Default: <code>editor</code> — change via Settings after logging in.</p>
+    </div>
+  </div>
+  <div id="admin-dashboard" style="display:none">
+    <div class="admin-wrap">
+      <div class="post-kicker">Editorial Dashboard</div>
+      <h1 class="admin-title">Of The Author</h1>
+      <p class="admin-subtitle">Manage posts, review submissions, and moderate comments.</p>
+      <div class="admin-tabs">
+        <div class="admin-tab active" onclick="switchAdminTab('new-post',this)">New Post</div>
+        <div class="admin-tab" onclick="switchAdminTab('manage-posts',this)">All Posts</div>
+        <div class="admin-tab" onclick="switchAdminTab('submissions',this)">Submissions <span id="sub-badge"></span></div>
+        <div class="admin-tab" onclick="switchAdminTab('settings',this)">Settings</div>
+      </div>
+
+      <div class="admin-panel active" id="tab-new-post">
+        <label class="editor-label">Category / Kicker</label>
+        <input class="editor-input" id="np-kicker" placeholder="e.g. Analysis, Opinion, Markets…">
+        <label class="editor-label">Headline *</label>
+        <input class="editor-input headline" id="np-headline" placeholder="The headline of your post">
+        <label class="editor-label">Deck (subheadline)</label>
+        <input class="editor-input" id="np-deck" placeholder="A one-sentence summary or compelling sentence">
+        <label class="editor-label">Author Name</label>
+        <input class="editor-input" id="np-author" placeholder="By whom? Leave blank to use 'The Editor'">
+        <label class="editor-label">Body *</label>
+        <textarea class="editor-textarea" id="np-body" rows="14" placeholder="Write your post here. Separate paragraphs with a blank line."></textarea>
+        <label class="editor-label">Image URL (optional)</label>
+        <input class="editor-input" id="np-img" placeholder="https://… or leave blank">
+        <label class="editor-label">Image Caption</label>
+        <input class="editor-input" id="np-img-caption" placeholder="Caption for the image">
+        <label class="editor-label">Feature as Lead Story?</label>
+        <select class="editor-input" id="np-featured" style="font-family:'DM Sans',sans-serif;font-size:14px;">
+          <option value="no">No — add to archive</option>
+          <option value="yes">Yes — show as lead story</option>
+        </select>
+        <button class="btn btn-primary" onclick="publishPost()">Publish Post</button>
+      </div>
+
+      <div class="admin-panel" id="tab-manage-posts">
+        <div id="manage-posts-list"><div class="loading-state">Loading…</div></div>
+      </div>
+
+      <div class="admin-panel" id="tab-submissions">
+        <div id="submissions-list"><div class="loading-state">Loading…</div></div>
+      </div>
+
+      <div class="admin-panel" id="tab-settings">
+        <label class="editor-label">Change Editor Password</label>
+        <input class="editor-input" type="password" id="new-password" placeholder="New password">
+        <button class="btn btn-primary" onclick="changePassword()" style="margin-bottom:24px;">Save Password</button>
+        <hr style="border:none;border-top:1px solid var(--rule);margin:24px 0;">
+        <label class="editor-label" style="color:var(--accent);">Danger Zone</label>
+        <p style="font-size:14px;color:var(--ink-muted);margin-bottom:14px;">Permanently delete all posts, comments, and submissions from Firestore.</p>
+        <button class="btn btn-secondary" onclick="clearAll()">Clear All Data</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp }   from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {
+  getFirestore, collection, doc,
+  getDocs, getDoc, addDoc, setDoc, updateDoc, deleteDoc,
+  query, orderBy, where, writeBatch, Timestamp
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey:            "AIzaSyBY6Oh1-5ZQQ8ouTyuQmJSLn0Lv2pqLBx0",
+  authDomain:        "of-the-author.firebaseapp.com",
+  projectId:         "of-the-author",
+  storageBucket:     "of-the-author.firebasestorage.app",
+  messagingSenderId: "389605355584",
+  appId:             "1:389605355584:web:9ed31ff0c0ebe9cc296fa5",
+  measurementId:     "G-6VPWRP1BFN"
+};
+
+const app = initializeApp(firebaseConfig);
+const db  = getFirestore(app);
+
+const postsCol    = ()       => collection(db, 'posts');
+const subsCol     = ()       => collection(db, 'submissions');
+const commentsCol = (postId) => collection(db, 'posts', postId, 'comments');
+const settingsRef = ()       => doc(db, 'settings', 'config');
+
+// ── date ──
+document.getElementById('masthead-date').textContent =
+  new Date().toLocaleDateString('en-US', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+
+// ── utilities ──
+function esc(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function fmtDate(v) {
+  if (!v) return '';
+  const d = v.toDate ? v.toDate() : new Date(v);
+  return d.toLocaleDateString('en-US', { month:'long', day:'numeric', year:'numeric' });
+}
+function trunc(s, n) { return s && s.length > n ? s.slice(0,n).trim()+'…' : (s||''); }
+function preview(b)  { return (b||'').replace(/\n/g,' ').slice(0,200); }
+
+let toastTimer;
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 3200);
+}
+
+// ── state ──
+let isEditor = false;
+let curPost  = null;
+
+// ── nav ──
+window.showPage = function(id, el) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  if (el) el.classList.add('active');
+  window.scrollTo(0,0);
+  if (id === 'home')  renderHome();
+  if (id === 'admin') renderAdmin();
+};
+
+// ════════════════════════════════════════════════
+// HOME
+// ════════════════════════════════════════════════
+async function renderHome() {
+  const bz = document.getElementById('front-banner-zone');
+  const mz = document.getElementById('more-posts-zone');
+  bz.innerHTML = '<div class="loading-state">Loading…</div>';
+  mz.innerHTML = '';
+
+  const snap  = await getDocs(query(postsCol(), orderBy('date','desc')));
+  const posts = snap.docs.map(d => ({ id:d.id, ...d.data() }));
+
+  if (!posts.length) {
+    bz.innerHTML = `<div class="empty-state" style="padding:80px 24px;">
+      <div class="empty-state-title">No posts yet</div>
+      <p style="font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink-muted);margin-top:8px;">
+        Head to the Editor panel to publish your first piece.</p></div>`;
+    return;
+  }
+
+  const lead = posts.find(p => p.featured) || posts[0];
+  const rest = posts.filter(p => p.id !== lead.id);
+
+  bz.innerHTML = `<div class="front-banner">
+    <div class="front-banner-lead">
+      ${lead.imgUrl ? `<img src="${esc(lead.imgUrl)}" alt="" style="width:100%;height:240px;object-fit:cover;margin-bottom:16px;" onerror="this.style.display='none'">` : ''}
+      <div class="post-kicker">${esc(lead.kicker||'Featured')}</div>
+      <div class="post-headline-xl" onclick="openArticle('${lead.id}')">${esc(lead.headline)}</div>
+      <div class="post-deck">${esc(lead.deck||'')}</div>
+      <div class="post-byline"><strong>${esc(lead.author||'The Editor')}</strong> · ${fmtDate(lead.date)}</div>
+    </div>
+    <div class="front-banner-secondary">
+      ${rest.slice(0,2).map(p => `<div class="secondary-post">
+        <div class="post-kicker">${esc(p.kicker||'')}</div>
+        <div class="post-headline-lg" onclick="openArticle('${p.id}')">${esc(p.headline)}</div>
+        <div class="post-byline"><strong>${esc(p.author||'The Editor')}</strong> · ${fmtDate(p.date)}</div>
+      </div>`).join('') || '<p style="color:var(--ink-muted);font-size:15px;font-style:italic;">More posts will appear here.</p>'}
+    </div>
+  </div>`;
+
+  const archive = rest.slice(2);
+  if (!archive.length) { mz.innerHTML = ''; return; }
+  mz.innerHTML = `
+    <div class="section-rule">
+      <span class="section-rule-line"></span>
+      <span class="section-rule-label">More from The Author</span>
+      <span class="section-rule-line"></span>
+    </div>
+    <div class="posts-grid">${archive.map(p => `
+      <div class="post-card" onclick="openArticle('${p.id}')">
+        ${p.imgUrl ? `<img class="post-card-img" src="${esc(p.imgUrl)}" alt="" onerror="this.style.display='none'">` : ''}
+        <div class="post-kicker">${esc(p.kicker||'')}</div>
+        <div class="post-headline-sm">${esc(p.headline)}</div>
+        <div class="post-deck" style="font-size:15px;">${trunc(p.deck||preview(p.body),120)}</div>
+        <div class="post-byline"><strong>${esc(p.author||'The Editor')}</strong> · ${fmtDate(p.date)}</div>
+      </div>`).join('')}
+    </div>`;
+}
+
+// ════════════════════════════════════════════════
+// ARTICLE
+// ════════════════════════════════════════════════
+window.openArticle = async function(id) {
+  curPost = id;
+  const snap = await getDoc(doc(db,'posts',id));
+  if (!snap.exists()) return;
+  const p = { id:snap.id, ...snap.data() };
+
+  document.getElementById('art-kicker').textContent   = p.kicker||'';
+  document.getElementById('art-headline').textContent = p.headline;
+  document.getElementById('art-deck').textContent     = p.deck||'';
+  document.getElementById('art-meta').innerHTML =
+    `By <strong>${esc(p.author||'The Editor')}</strong> &nbsp;·&nbsp; ${fmtDate(p.date)}`;
+
+  const img = document.getElementById('art-img');
+  if (p.imgUrl) { img.src = p.imgUrl; img.style.display = 'block'; img.onerror = ()=>img.style.display='none'; }
+  else { img.style.display = 'none'; }
+  document.getElementById('art-img-caption').textContent = p.imgCaption||'';
+  document.getElementById('art-body').innerHTML =
+    (p.body||'').split(/\n\n+/).map(t => `<p>${esc(t).replace(/\n/g,'<br>')}</p>`).join('');
+
+  await renderComments(id);
+
+  document.querySelectorAll('.page').forEach(pg => pg.classList.remove('active'));
+  document.querySelectorAll('.nav-link').forEach(n  => n.classList.remove('active'));
+  document.getElementById('page-article').classList.add('active');
+  window.scrollTo(0,0);
+};
+
+// ════════════════════════════════════════════════
+// COMMENTS
+// ════════════════════════════════════════════════
+async function renderComments(postId) {
+  const sec = document.getElementById('comments-section');
+  sec.innerHTML = '<div class="loading-state">Loading discussion…</div>';
+
+  const snap     = await getDocs(query(commentsCol(postId), orderBy('date','asc')));
+  const comments = snap.docs.map(d => ({ id:d.id, ...d.data() }));
+
+  const cmtHtml = comments.map((c,ci) => {
+    const rHtml = (c.replies||[]).map((r,ri) => `
+      <div class="reply">
+        <div class="comment-author-row">
+          <span class="comment-author ${r.isEditor?'is-editor':''}">${esc(r.author)}</span>
+          <span class="comment-date">${fmtDate(r.date)}</span>
+        </div>
+        <div class="comment-body">${esc(r.body)}</div>
+        ${isEditor?`<div class="comment-actions"><button class="comment-reply-btn" style="color:var(--accent-light)"
+          onclick="deleteReply('${postId}','${c.id}',${ri})">Delete</button></div>`:''}
+      </div>`).join('');
+
+    return `<div class="comment" id="comment-${ci}">
+      <div class="comment-author-row">
+        <span class="comment-author ${c.isEditor?'is-editor':''}">${esc(c.author)}</span>
+        <span class="comment-date">${fmtDate(c.date)}</span>
+      </div>
+      <div class="comment-body">${esc(c.body)}</div>
+      <div class="comment-actions">
+        <button class="comment-reply-btn" onclick="toggleReply(${ci})">Reply</button>
+        ${isEditor?`<button class="comment-reply-btn" style="color:var(--accent-light)"
+          onclick="deleteComment('${postId}','${c.id}')">Delete</button>`:''}
+      </div>
+      ${rHtml ? `<div class="replies">${rHtml}</div>` : ''}
+      <div id="rf-${ci}" style="display:none;margin-top:14px;">
+        ${isEditor
+          ? `<div class="form-group" style="margin-bottom:10px;"><label>Reply as Editor</label>
+             <textarea id="rt-${ci}" rows="3" placeholder="Your response…"></textarea></div>
+             <button class="btn btn-primary btn-sm" onclick="submitReply('${postId}','${c.id}',${ci},true)">Publish</button>
+             <button class="btn btn-secondary btn-sm" style="margin-left:8px;" onclick="document.getElementById('rf-${ci}').style.display='none'">Cancel</button>`
+          : `<div class="form-row"><div class="form-group"><label>Name</label>
+             <input type="text" id="rn-${ci}" placeholder="Your name"></div></div>
+             <div class="form-group" style="margin-bottom:10px;"><label>Reply</label>
+             <textarea id="rt-${ci}" rows="3" placeholder="Your reply…"></textarea></div>
+             <button class="btn btn-primary btn-sm" onclick="submitReply('${postId}','${c.id}',${ci},false)">Post Reply</button>
+             <button class="btn btn-secondary btn-sm" style="margin-left:8px;" onclick="document.getElementById('rf-${ci}').style.display='none'">Cancel</button>`}
+      </div>
+    </div>`;
+  }).join('');
+
+  sec.innerHTML = `
+    <div class="comments-header">
+      <span class="comments-title">Discussion</span>
+      <span class="comments-count">${comments.length} comment${comments.length!==1?'s':''}</span>
+    </div>
+    <div class="comment-form">
+      <div class="comment-form-title">Join the Conversation</div>
+      <div class="form-row">
+        <div class="form-group"><label>Name *</label><input type="text" id="cmnt-name" placeholder="Your name"></div>
+        <div class="form-group"><label>Email (not published)</label><input type="email" id="cmnt-email" placeholder="you@example.com"></div>
+      </div>
+      <div class="form-group" style="margin-bottom:12px;">
+        <label>Comment *</label><textarea id="cmnt-body" rows="4" placeholder="Share your thoughts…"></textarea>
+      </div>
+      <button class="btn btn-primary" onclick="submitComment('${postId}')">Post Comment</button>
+    </div>
+    ${cmtHtml || `<div class="empty-state" style="padding:32px 0;">
+      <div class="empty-state-title" style="font-size:18px;">No comments yet</div>
+      <p style="font-size:14px;font-family:'DM Sans',sans-serif;color:var(--ink-muted);margin-top:6px;">Be the first to respond.</p>
+    </div>`}`;
+}
+
+window.toggleReply = function(ci) {
+  const f = document.getElementById('rf-'+ci);
+  f.style.display = f.style.display === 'none' ? 'block' : 'none';
+};
+
+window.submitComment = async function(postId) {
+  const name = document.getElementById('cmnt-name').value.trim();
+  const body = document.getElementById('cmnt-body').value.trim();
+  if (!name||!body) { toast('Please enter your name and comment.'); return; }
+  await addDoc(commentsCol(postId), { author:name, body, date:Timestamp.now(), replies:[], isEditor:false });
+  await renderComments(postId);
+  toast('Comment posted.');
+};
+
+window.submitReply = async function(postId, commentId, ci, asEditor) {
+  const body = (document.getElementById('rt-'+ci)||{}).value?.trim();
+  if (!body) { toast('Please enter a reply.'); return; }
+  let author = 'The Editor';
+  if (!asEditor) {
+    author = (document.getElementById('rn-'+ci)||{}).value?.trim();
+    if (!author) { toast('Please enter your name.'); return; }
+  }
+  const ref  = doc(db,'posts',postId,'comments',commentId);
+  const snap = await getDoc(ref);
+  if (!snap.exists()) return;
+  const replies = [...(snap.data().replies||[]), { author, body, date:new Date().toISOString(), isEditor:asEditor }];
+  await updateDoc(ref, { replies });
+  await renderComments(postId);
+  toast('Reply posted.');
+};
+
+window.deleteComment = async function(postId, commentId) {
+  if (!confirm('Delete this comment and all replies?')) return;
+  await deleteDoc(doc(db,'posts',postId,'comments',commentId));
+  await renderComments(postId);
+  toast('Comment deleted.');
+};
+
+window.deleteReply = async function(postId, commentId, ri) {
+  if (!confirm('Delete this reply?')) return;
+  const ref  = doc(db,'posts',postId,'comments',commentId);
+  const snap = await getDoc(ref);
+  if (!snap.exists()) return;
+  const replies = [...(snap.data().replies||[])];
+  replies.splice(ri,1);
+  await updateDoc(ref, { replies });
+  await renderComments(postId);
+  toast('Reply deleted.');
+};
+
+// ════════════════════════════════════════════════
+// SUBMISSIONS
+// ════════════════════════════════════════════════
+window.submitEssay = async function() {
+  const name  = document.getElementById('sub-name').value.trim();
+  const email = document.getElementById('sub-email').value.trim();
+  const title = document.getElementById('sub-title').value.trim();
+  const essay = document.getElementById('sub-essay').value.trim();
+  if (!name||!email||!title||!essay) { toast('Please fill in all required fields.'); return; }
+  await addDoc(subsCol(), {
+    name, email,
+    affiliation: document.getElementById('sub-affiliation').value.trim(),
+    phone:       document.getElementById('sub-phone').value.trim(),
+    title, essay,
+    date:   Timestamp.now(),
+    status: 'pending'
+  });
+  ['sub-name','sub-email','sub-affiliation','sub-phone','sub-title','sub-essay']
+    .forEach(id => { document.getElementById(id).value = ''; });
+  toast('Your submission has been received. Thank you.');
+};
+
+// ════════════════════════════════════════════════
+// ADMIN
+// ════════════════════════════════════════════════
+async function getPassword() {
+  const s = await getDoc(settingsRef());
+  return s.exists() ? (s.data().password||'editor') : 'editor';
+}
+
+function renderAdmin() {
+  document.getElementById('admin-login-zone').style.display  = isEditor ? 'none'  : 'block';
+  document.getElementById('admin-dashboard').style.display   = isEditor ? 'block' : 'none';
+  if (isEditor) { renderManagePosts(); renderSubmissions(); }
+}
+
+window.adminLogin = async function() {
+  const pw = document.getElementById('admin-password').value;
+  if (pw === await getPassword()) {
+    isEditor = true;
+    renderAdmin();
+    toast('Welcome back, Editor.');
+  } else {
+    toast('Incorrect password. Please try again.');
+  }
+};
+
+window.switchAdminTab = function(id, el) {
+  document.querySelectorAll('.admin-tab').forEach(t  => t.classList.remove('active'));
+  document.querySelectorAll('.admin-panel').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('tab-'+id).classList.add('active');
+  if (id === 'manage-posts') renderManagePosts();
+  if (id === 'submissions')  renderSubmissions();
+};
+
+window.publishPost = async function() {
+  const headline = document.getElementById('np-headline').value.trim();
+  const body     = document.getElementById('np-body').value.trim();
+  if (!headline||!body) { toast('Headline and body are required.'); return; }
+  const isFeatured = document.getElementById('np-featured').value === 'yes';
+  if (isFeatured) {
+    const snap  = await getDocs(query(postsCol(), where('featured','==',true)));
+    const batch = writeBatch(db);
+    snap.docs.forEach(d => batch.update(d.ref,{ featured:false }));
+    await batch.commit();
+  }
+  await addDoc(postsCol(), {
+    kicker:     document.getElementById('np-kicker').value.trim(),
+    headline, deck: document.getElementById('np-deck').value.trim(),
+    author:     document.getElementById('np-author').value.trim(),
+    body,
+    imgUrl:     document.getElementById('np-img').value.trim(),
+    imgCaption: document.getElementById('np-img-caption').value.trim(),
+    featured:   isFeatured,
+    date:       Timestamp.now()
+  });
+  ['np-kicker','np-headline','np-deck','np-author','np-body','np-img','np-img-caption']
+    .forEach(id => { document.getElementById(id).value = ''; });
+  document.getElementById('np-featured').value = 'no';
+  toast('Post published.');
+  renderManagePosts();
+};
+
+async function renderManagePosts() {
+  const el = document.getElementById('manage-posts-list');
+  el.innerHTML = '<div class="loading-state">Loading…</div>';
+  const snap  = await getDocs(query(postsCol(), orderBy('date','desc')));
+  const posts = snap.docs.map(d => ({ id:d.id, ...d.data() }));
+  if (!posts.length) { el.innerHTML = '<div class="empty-state"><div class="empty-state-title">No posts yet</div></div>'; return; }
+  el.innerHTML = `<div class="pending-list">${posts.map(p => `
+    <div class="pending-card">
+      <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:4px;">
+        <div class="pending-card-name">${esc(p.headline)}</div>
+        ${p.featured?'<span class="badge badge-approved">Lead Story</span>':''}
+      </div>
+      <div class="pending-card-contact">${esc(p.author||'The Editor')} · ${fmtDate(p.date)}</div>
+      <div class="pending-card-actions">
+        <button class="btn btn-secondary btn-sm" onclick="setFeatured('${p.id}',${!p.featured})">${p.featured?'Unfeature':'Set as Lead'}</button>
+        <button class="btn btn-secondary btn-sm" onclick="deletePost('${p.id}')"
+          style="color:var(--accent-light);border-color:var(--accent-light);">Delete</button>
+      </div>
+    </div>`).join('')}</div>`;
+}
+
+window.setFeatured = async function(id, val) {
+  if (val) {
+    const snap  = await getDocs(query(postsCol(), where('featured','==',true)));
+    const batch = writeBatch(db);
+    snap.docs.forEach(d => batch.update(d.ref,{ featured:false }));
+    await batch.commit();
+  }
+  await updateDoc(doc(db,'posts',id), { featured:val });
+  renderManagePosts();
+  toast(val ? 'Set as lead story.' : 'Removed from lead.');
+};
+
+window.deletePost = async function(id) {
+  if (!confirm('Delete this post permanently?')) return;
+  await deleteDoc(doc(db,'posts',id));
+  renderManagePosts();
+  toast('Post deleted.');
+};
+
+async function renderSubmissions() {
+  const el    = document.getElementById('submissions-list');
+  const badge = document.getElementById('sub-badge');
+  el.innerHTML = '<div class="loading-state">Loading…</div>';
+  const snap = await getDocs(query(subsCol(), orderBy('date','desc')));
+  const subs = snap.docs.map(d => ({ id:d.id, ...d.data() }));
+  badge.textContent = subs.filter(s => s.status==='pending').length > 0
+    ? ` (${subs.filter(s=>s.status==='pending').length})` : '';
+  if (!subs.length) { el.innerHTML = '<div class="empty-state"><div class="empty-state-title">No submissions yet</div></div>'; return; }
+  el.innerHTML = `<div class="pending-list">${subs.map(s => `
+    <div class="pending-card">
+      <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:2px;">
+        <div class="pending-card-name">${esc(s.title)}</div>
+        <span class="badge ${s.status==='pending'?'badge-pending':'badge-approved'}">${esc(s.status)}</span>
+      </div>
+      <div class="pending-card-contact">${esc(s.name)} · ${esc(s.email)}${s.phone?' · '+esc(s.phone):''}</div>
+      <div class="pending-card-excerpt">${esc(s.essay)}</div>
+      <div class="pending-card-actions">
+        <button class="btn btn-primary btn-sm" onclick="publishSubmission('${s.id}')">Publish as Post</button>
+        <button class="btn btn-secondary btn-sm" onclick="deleteSubmission('${s.id}')"
+          style="color:var(--accent-light);border-color:var(--accent-light);">Dismiss</button>
+      </div>
+    </div>`).join('')}</div>`;
+}
+
+window.publishSubmission = async function(subId) {
+  const snap = await getDoc(doc(db,'submissions',subId));
+  if (!snap.exists()) return;
+  const s = snap.data();
+  await addDoc(postsCol(), {
+    kicker:'Contributor', headline:s.title, deck:'',
+    author: s.name + (s.affiliation ? ', '+s.affiliation : ''),
+    body:s.essay, imgUrl:'', imgCaption:'', featured:false, date:Timestamp.now()
+  });
+  await updateDoc(doc(db,'submissions',subId), { status:'published' });
+  renderSubmissions();
+  toast('Submission published as a post.');
+};
+
+window.deleteSubmission = async function(subId) {
+  if (!confirm('Remove this submission?')) return;
+  await deleteDoc(doc(db,'submissions',subId));
+  renderSubmissions();
+  toast('Submission removed.');
+};
+
+window.changePassword = async function() {
+  const pw = document.getElementById('new-password').value.trim();
+  if (!pw) { toast('Please enter a new password.'); return; }
+  await setDoc(settingsRef(), { password:pw }, { merge:true });
+  document.getElementById('new-password').value = '';
+  toast('Password updated.');
+};
+
+window.clearAll = async function() {
+  if (!confirm('Permanently delete ALL posts, comments, and submissions? This cannot be undone.')) return;
+  const [ps, ss] = await Promise.all([getDocs(postsCol()), getDocs(subsCol())]);
+  const batch = writeBatch(db);
+  ps.docs.forEach(d => batch.delete(d.ref));
+  ss.docs.forEach(d => batch.delete(d.ref));
+  await batch.commit();
+  isEditor = false;
+  showPage('home', document.querySelector('.nav-link'));
+  toast('All data cleared.');
+};
+
+// ════════════════════════════════════════════════
+// INIT — secret URL
+// ════════════════════════════════════════════════
+function checkHash() {
+  if (window.location.hash === '#editor-secret') {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('page-admin').classList.add('active');
+    renderAdmin();
+  }
+}
+window.addEventListener('hashchange', checkHash);
+renderHome();
+checkHash();
+</script>
+</body>
+</html>
